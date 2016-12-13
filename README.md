@@ -29,15 +29,16 @@ Copiar o arquivo **.env.example** para **.env** e alterar as variáveis de ambie
 
 | Variável             | Descrição                |
 |:-------------------- |:------------------------ |
-| PHP_VERSION          | Vaersão do PHP (disc) |
+| PHP_VERSION          | Vaersão do PHP (5.6 ou 7.1) |
 | MYSQL_ROOT_PASSWORD  | Senha do usuário **root** do MySQL |
 | NGINX_HOSTS_CONF     | Díretório que pussui arquivos de configuração de virtualhosts(sites) do nginx |
 | WWW_DATA             | Document root onde estão os arquivos dos sites |
 
-Importante: o arquivo **.env.example** não deve ser editado.
+Importante: o arquivo **.env.example** serve apenas para exemplo e não deve ser editado.
 
 Comandos básicos do Docker:
 ```
+$ docker-compose build                     # baixa as imagens e compila a estrutura de containers
 $ docker-compose up                        # provisiona os containers (deve ser executato no diretório onde está o arquivo docker-compose.yml)
 $ docker ps                                # listar container em execução
 $ docker exec -it <container_name> bash    # acessa o terminal do container
