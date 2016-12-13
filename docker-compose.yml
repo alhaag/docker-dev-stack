@@ -31,7 +31,7 @@ services:
 
   nodejs:
     build: ./nodejs
-    container_name: nodejs_andre
+    container_name: nodejs
 
   web:
     image: nginx:latest
