@@ -30,6 +30,7 @@ Copiar o arquivo **.env.example** para **.env** e alterar as variáveis de ambie
 | Variável             | Descrição                |
 |:-------------------- |:------------------------ |
 | PHP_VERSION          | Vaersão do PHP (5.6 ou 7.1) |
+| MYSQL_VERSION        | Vaersão do BD MySQL (5.6, 5.6.35, 5.7 ou latest) |
 | MYSQL_ROOT_PASSWORD  | Senha do usuário **root** do MySQL |
 | NGINX_HOSTS_CONF     | Díretório que pussui arquivos de configuração de virtualhosts(sites) do nginx |
 | WWW_DATA             | Document root onde estão os arquivos dos sites |

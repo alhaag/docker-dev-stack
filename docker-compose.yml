@@ -2,7 +2,7 @@ version: '2'
 
 services:
   mysql:
-    image: mysql
+    image: mysql:${MYSQL_VERSION}
     container_name: mysql
     hostname: mysql
     stdin_open: true
