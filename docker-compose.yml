@@ -16,6 +16,7 @@ services:
        MYSQL_CLIENT: '%.%.%.%'
     volumes:
       - ./mysql:/etc/mysql/conf.d
+      - "${MYSQL_DATA}:/var/lib/mysql"
 
   php-fpm:
     build: ./php${PHP_VERSION}-fpm

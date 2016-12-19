@@ -29,8 +29,9 @@ Copiar o arquivo **.env.example** para **.env** e alterar as variáveis de ambie
 
 | Variável             | Descrição                |
 |:-------------------- |:------------------------ |
-| PHP_VERSION          | Vaersão do PHP (5.6 ou 7.1) |
-| MYSQL_VERSION        | Vaersão do BD MySQL (5.6, 5.6.35, 5.7 ou latest) |
+| PHP_VERSION          | Versão do PHP (5.6 ou 7.1) |
+| MYSQL_VERSION        | Versão do BD MySQL (5.6, 5.6.35, 5.7 ou latest) |
+| MYSQL_DATA           | Diretório onde serão armazenados os dados do MySQL |
 | MYSQL_ROOT_PASSWORD  | Senha do usuário **root** do MySQL |
 | NGINX_HOSTS_CONF     | Díretório que pussui arquivos de configuração de virtualhosts(sites) do nginx |
 | WWW_DATA             | Document root onde estão os arquivos dos sites |
@@ -89,4 +90,48 @@ docker run -it -u `id -u $USER` --rm \
       --config.storage.cache=/home/$("`echo $USER`")/.bower/cache"
 ```
 
-Dica: para facilitar a utilização podem ser criados alias no arquivo **~/.basrc**
+Dica: para facilitar a utilização podem ser criados funções no arquivo **~/.basrc** para executar as tarefas descritas acima de forma transparente.
+
+**Trecho de exemplo do bashrc:**
+```
+...
+
+# DOCKER ALIAS FUNCTIONS
+# ==============================================================================
+
+# ####################################
+# Executa o comando composer do gerenciador de pacotes do PHP em um container
+# Docker. Os conteúdo do diretório onde o comando é executado é espelhado no
+# container para que este tenha acesso ao projeto.
+#
+# Paramns:
+#   $1 Opções do composer a serem executadas. Ex install ou update
+# ####################################
+composer() {
+    docker run --rm -u $UID -v `pwd`:/app composer/composer $1
+}
+
+# ####################################
+# Executa o comando npm do gerenciador de pacotes do NodeJS em um container
+# Docker. Os conteúdo do diretório onde o comando é executado é espelhado no
+# container para que este tenha acesso ao projeto.
+#
+# Paramns:
+#   $1 Opções do npm a serem executadas. Ex install
+# ####################################
+npm() {
+    docker run -it -u `id -u $USER` --rm \
+    -v /etc/passwd:/etc/passwd \
+    -v "/home/$("`echo $USER`"):/home/$("`echo $USER`")" \
+    -v $(pwd):/app \
+    nodejs bash \
+    -ci "cd /app && npm ${1}"
+}
+
+...
+```
+
+## TODO
+
+ * Isolar armazenamento do MySQL para preservas informações a cada rebuild.
+ * Malhorar funções nodejs e npm.
