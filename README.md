@@ -133,5 +133,4 @@ npm() {
 
 ## TODO
 
- * Isolar armazenamento do MySQL para preservas informações a cada rebuild.
  * Malhorar funções nodejs e npm.
