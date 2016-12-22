@@ -43,7 +43,8 @@ Comandos básicos do Docker:
 $ docker-compose build                     # baixa as imagens e compila a estrutura de containers
 $ docker-compose up                        # provisiona os containers (deve ser executato no diretório onde está o arquivo docker-compose.yml)
 $ docker ps                                # listar container em execução
-$ docker exec -it <container_name> bash    # acessa o terminal do container
+$ docker exec -it <container_name> bash    # acessa o terminal do container (algumas distribuições como alpine possuem apenas **sh**)
+$ docker logs -f <container_name>          # observa logs do container
 <Ctrl> + d ou exit                         # abandona o terminal
 $ docker-compose restart                   # reinicia containers(reboot)
 $ docker-compose down                      # desliga containers
@@ -108,7 +109,7 @@ Dica: para facilitar a utilização podem ser criados funções no arquivo **~/.
 #   $1 Opções do composer a serem executadas. Ex install ou update
 # ####################################
 composer() {
-    docker run --rm -u $UID -v `pwd`:/app composer/composer $1
+    docker run --rm -u $UID -v `pwd`:/app composer/composer "$@"
 }
 
 # ####################################
@@ -125,11 +126,36 @@ npm() {
     -v "/home/$("`echo $USER`"):/home/$("`echo $USER`")" \
     -v $(pwd):/app \
     nodejs bash \
-    -ci "cd /app && npm ${1}"
+    -ci "cd /app && npm $@"
 }
 
+# ####################################
+# Executa o comando npm do gerenciador de pacotes do NodeJS em um container
+# Docker. Os conteúdo do diretório onde o comando é executado é espelhado no
+# container para que este tenha acesso ao projeto.
+#
+# Paramns:
+#   $1 Opções do npm a serem executadas. Ex install
+# ####################################
+mysql() {
+    # docker exec -it mysql bash -c 'mysql -uroot -p -e "show databases;"'
+    docker exec -it mysql bash -c 'mysql -uroot -p $@'
+}
 ...
 ```
+
+## Bonus
+
+Gerenciamento de containers e imagens por meio de interface gráfica com o cantainer **docker-ui**:
+```
+$ docker run -d -p 8080:9000 -v /var/run/docker.sock:/docker.sock --name dockerui abh1nav/dockerui:latest -e="/docker.sock"
+```
+
+Orquestrando containers por meio de interface gráfica **rancher**:
+```
+$ docker run -d --restart=unless-stopped -p 8080:8080 rancher/server
+```
+Mais detalhes em: http://rancher.com/
 
 ## TODO
 

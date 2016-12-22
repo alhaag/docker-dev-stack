@@ -15,11 +15,13 @@ services:
        MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
        MYSQL_CLIENT: '%.%.%.%'
     volumes:
-      - ./mysql:/etc/mysql/conf.d
+      - ./conf/mysql:/etc/mysql/conf.d
       - "${MYSQL_DATA}:/var/lib/mysql"
 
   php-fpm:
-    build: ./php${PHP_VERSION}-fpm
+    build:
+      context: .
+      dockerfile: Dockerfile.php${PHP_VERSION}-fpm.alpine
     container_name: php-fpm
     ports:
       - "9000:9000"
@@ -31,17 +33,20 @@ services:
       - mysql
 
   nodejs:
-    build: ./nodejs
+    build:
+      context: .
+      dockerfile: Dockerfile.node
     container_name: nodejs
 
   web:
-    image: nginx:latest
+    image: nginx:alpine
     container_name: nginx
     ports:
       - "80:80"
     volumes:
       - "${WWW_DATA}:/var/www/html"
       - "${NGINX_HOSTS_CONF}:/etc/nginx/conf.d"
+      - ./conf/nginx/nginx.conf:/etc/nginx/nginx.conf
     links:
       - php-fpm
       - mysql

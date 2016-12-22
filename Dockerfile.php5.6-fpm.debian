@@ -1,0 +1,34 @@
+FROM php:5.6-fpm
+
+MAINTAINER "Andre Luiz Haag" <andreluizhaag@gmail.com>
+
+# Install php
+RUN DEBIAN_FRONTEND=noninteractive apt-get update -q \
+    && DEBIAN_FRONTEND=noninteractive apt-get dist-upgrade -y \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y \
+        libfreetype6-dev \
+        libjpeg62-turbo-dev \
+        libmcrypt-dev \
+        libpng12-dev \
+        libcurl4-nss-dev \
+        libicu-dev \
+        libxml2-dev \
+    && docker-php-ext-install bcmath \
+    && docker-php-ext-install iconv \
+    && docker-php-ext-install mcrypt \
+    && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
+    && docker-php-ext-install gd \
+    && docker-php-ext-install curl \
+    && docker-php-ext-install intl \
+    && docker-php-ext-install mysqli \
+    && docker-php-ext-install pdo \
+    && docker-php-ext-install mysql \
+    && docker-php-ext-install pdo_mysql \
+    && docker-php-ext-install xml \
+    && docker-php-ext-install mbstring \
+    && docker-php-ext-install json
+
+# php.ini
+COPY conf/php/php.ini /usr/local/etc/php/
+
+CMD ["/usr/local/sbin/php-fpm"]
