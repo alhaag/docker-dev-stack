@@ -123,9 +123,9 @@ composer() {
 npm() {
     docker run -it -u `id -u $USER` --rm \
     -v /etc/passwd:/etc/passwd \
-    -v "/home/$("`echo $USER`"):/home/$("`echo $USER`")" \
+    -v "/home/$USER:/home/$USER" \
     -v $(pwd):/app \
-    nodejs bash \
+    dockerphpmysqlnginx_nodejs sh \
     -ci "cd /app && npm $@"
 }
 
@@ -139,7 +139,9 @@ npm() {
 # ####################################
 mysql() {
     # docker exec -it mysql bash -c 'mysql -uroot -p -e "show databases;"'
-    docker exec -it mysql bash -c 'mysql -uroot -p $@'
+    # docker exec -i mysql mysql -uroot -pPASSWD  < "db.sql"
+    # docker exec -it mysql mysql $@
+    docker exec -i mysql mysql $@
 }
 ...
 ```

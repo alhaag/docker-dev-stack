@@ -1,7 +1,4 @@
-#
-# $ sudo docker build -t nodejs .
-
-FROM node:7.2.1
+FROM node:alpine
 
 MAINTAINER "Andre Luiz Haag" <andreluizhaag@gmail.com>
 
