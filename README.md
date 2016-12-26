@@ -201,4 +201,5 @@ Mais detalhes em: http://rancher.com/
 
 ## TODO
 
- * Malhorar funções nodejs e npm.
+ * Criar container MongoDB.
+ * Criar container Redis.
