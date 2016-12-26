@@ -47,11 +47,3 @@ services:
       - mysql
     depends_on:
       - php-fpm
-
-  # os containers abaixo são utilizados apenas sob demanda
-  # o build é realizado aqui para agilizar execução quando demandada
-  nodejs:
-    build:
-      context: .
-      dockerfile: Dockerfile.node
-    container_name: nodejs

@@ -12,8 +12,8 @@ Prove ambiente de desenvolvimento em CentOS 7 com as seguintes aplicações:
    * bower
 
 ## Requisitos
- * Docker
- * Docker Compose
+ * Docker >= 1.12
+ * Docker Compose >= 1.9
 
 Exemplo de instalação do Docker e Docker Compose no Ubuntu:
 
@@ -125,8 +125,42 @@ npm() {
     -v /etc/passwd:/etc/passwd \
     -v "/home/$USER:/home/$USER" \
     -v $(pwd):/app \
-    dockerphpmysqlnginx_nodejs sh \
+    nodejs sh \
     -ci "cd /app && npm $@"
+}
+
+# ####################################
+# Executa o comando bower do gerenciador de pacotes front-end em um container
+# Docker. Os conteúdo do diretório onde o comando é executado é espelhado no
+# container para que este tenha acesso ao projeto.
+#
+# Paramns:
+#   $1 Opções do bower a serem executadas. Ex install
+# ####################################
+bower() {
+    docker run -it -u `id -u $USER` --rm \
+    -v /etc/passwd:/etc/passwd \
+    -v "/home/$USER:/home/$USER" \
+    -v $(pwd):/app \
+    nodejs sh \
+    -ci "cd /app && bower $@"
+}
+
+# ####################################
+# Executa o comando gulp do para execução de tarefas programadas em um container
+# Docker. Os conteúdo do diretório onde o comando é executado é espelhado no
+# container para que este tenha acesso ao projeto.
+#
+# Paramns:
+#   $1 Opções do gulp a serem executadas. Ex install
+# ####################################
+gulp() {
+    docker run -it -u `id -u $USER` --rm \
+    -v /etc/passwd:/etc/passwd \
+    -v "/home/$USER:/home/$USER" \
+    -v $(pwd):/app \
+    nodejs sh \
+    -ci "cd /app && gulp $@"
 }
 
 # ####################################
@@ -143,6 +177,12 @@ mysql() {
     # docker exec -it mysql mysql $@
     docker exec -i mysql mysql $@
 }
+
+export -f composer
+export -f npm
+export -f bower
+export -f gulp
+export -f mysql
 ...
 ```
 
