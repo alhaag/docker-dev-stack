@@ -2,6 +2,15 @@ version: '2'
 
 services:
 
+  mongo:
+    image: mongo:latest
+    container_name: mongo
+    hostname: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - "${MONGO_DATA}:/data/db"
+
   mysql:
     image: mysql:${MYSQL_VERSION}
     container_name: mysql

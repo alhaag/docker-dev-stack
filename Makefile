@@ -4,7 +4,7 @@ build:
 	@docker-compose rm -f
 	@docker-compose build --force-rm
 
-start:
+up:
 	@docker-compose up
 
 stop:

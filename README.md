@@ -7,6 +7,7 @@ Prove ambiente de desenvolvimento em CentOS 7 com as seguintes aplicações:
  * PHP-FPM
  * Nginx
  * MySQL
+ * MongoDB
  * Nodejs
    * gulp
    * bower
@@ -33,6 +34,7 @@ Copiar o arquivo **.env.example** para **.env** e alterar as variáveis de ambie
 | MYSQL_VERSION        | Versão do BD MySQL (5.6, 5.6.35, 5.7 ou latest) |
 | MYSQL_DATA           | Diretório onde serão armazenados os dados do MySQL |
 | MYSQL_ROOT_PASSWORD  | Senha do usuário **root** do MySQL |
+| MONGO_DATA           | Diretório onde serão armazenados os dados do MongoDB |
 | NGINX_HOSTS_CONF     | Díretório que pussui arquivos de configuração de virtualhosts(sites) do nginx |
 | WWW_DATA             | Document root onde estão os arquivos dos sites |
 
@@ -164,18 +166,41 @@ gulp() {
 }
 
 # ####################################
-# Executa o comando npm do gerenciador de pacotes do NodeJS em um container
-# Docker. Os conteúdo do diretório onde o comando é executado é espelhado no
-# container para que este tenha acesso ao projeto.
+# Executa o comando mysql do container para execução de comandos e importação de
+# bases.
+# Exemplos de uso:
+#   $ mysql -uroot -pPASSWD  < "db.sql"
 #
 # Paramns:
-#   $1 Opções do npm a serem executadas. Ex install
+#   $1 Opções do mysql a serem executadas. Ex install
 # ####################################
 mysql() {
     # docker exec -it mysql bash -c 'mysql -uroot -p -e "show databases;"'
     # docker exec -i mysql mysql -uroot -pPASSWD  < "db.sql"
-    # docker exec -it mysql mysql $@
     docker exec -i mysql mysql $@
+}
+
+# ####################################
+# Executa o comando mongo para acesso ao cli do MongoDB presente no container.
+#
+# Paramns:
+#   void
+# ####################################
+mongo() {
+    docker exec -it mongo mongo
+}
+
+# ####################################
+# Executa o comando mongoimport para importação de dados para o MongoDB.
+# Exemplos de uso:
+#   $ mongoimport --jsonArray --db dsc-api-address --collection Users --drop < users.json
+#
+# Paramns:
+#   void
+# ####################################
+mongoimport() {
+
+    docker exec -i mongo mongoimport $@
 }
 
 export -f composer
@@ -183,6 +208,8 @@ export -f npm
 export -f bower
 export -f gulp
 export -f mysql
+export -f mongo
+export -f mongoimport
 ...
 ```
 
