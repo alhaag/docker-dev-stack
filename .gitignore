@@ -2,3 +2,4 @@
 .DS_Store
 mysql-data
 !mysql-data/README.md
+data/
