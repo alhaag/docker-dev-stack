@@ -1,11 +1,17 @@
 SHELL := /bin/bash
-build:
-	@docker build --force-rm -t nodejs - < Dockerfile.node
-	@docker-compose rm -f
-	@docker-compose build --force-rm
 
+# install bash functions
+bashrc:
+	@./make.sh bashrc
+
+# build/rebuild containers
+build:
+	@./make.sh build
+
+# power on containers
 up:
 	@docker-compose up
 
+# power off containers
 stop:
 	@docker-compose stop

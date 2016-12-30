@@ -99,7 +99,6 @@ mongo() {
 #   void
 # ####################################
 mongoimport() {
-
     docker exec -i mongo mongoimport $@
 }
 
