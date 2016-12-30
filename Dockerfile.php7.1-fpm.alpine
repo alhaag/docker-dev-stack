@@ -9,8 +9,10 @@ RUN apk upgrade --update \
     freetype-dev \
     libjpeg-turbo-dev \
     libltdl \
+    curl-dev \
     libmcrypt-dev \
     libpng-dev \
+    icu-dev \
   && docker-php-ext-install -j$(nproc) \
     bcmath \
     iconv \
@@ -19,7 +21,11 @@ RUN apk upgrade --update \
   && docker-php-ext-install -j$(nproc) \
     gd \
     mysqli \
+    json \
+    curl \
+    mbstring \
     pdo \
+    intl \
     # mysql \ não existe no php 7
     pdo_mysql
 
