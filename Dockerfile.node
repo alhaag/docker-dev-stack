@@ -2,13 +2,17 @@ FROM node:alpine
 
 MAINTAINER "Andre Luiz Haag" <andreluizhaag@gmail.com>
 
-#ARG proxy_address
-#ARG proxy_port
-#ARG proxy_user
-#ARG proxy_passwd
+ARG use_proxy
+ARG proxy_server
+ARG proxy_port
+ARG proxy_user
+ARG proxy_passwd
 
-#RUN npm config set proxy http://$proxy_user:$proxy_passwd@$proxy_address:$proxy_port/
-#RUN npm config set https-proxy http://$proxy_user:$proxy_passwd@$proxy_address:$proxy_port/
+RUN if $use_proxy == "true"; then \
+        npm config set proxy http://$proxy_user:$proxy_passwd@$proxy_server:$proxy_port/ ; \
+        npm config set https-proxy http://$proxy_user:$proxy_passwd@$proxy_server:$proxy_port/ ; \
+        echo -e "NPM Utilizando Proxy: ${proxy_server}:${proxy_port}"; \
+    fi
 
 # Install Gulp & Bower
 RUN npm install -g gulp bower
