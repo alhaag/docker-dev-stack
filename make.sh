@@ -51,16 +51,20 @@ bashrc ()
 build ()
 {
     # set vars
-    # PROXY_SERVER= $(awk -F "=" '/PROXY_SERVER/ {print $2}' .env)
+    local USE_PROXY="$(awk -F "=" '/USE_PROXY/ {print $2}' .env)"
+    local PROXY_SERVER="$(awk -F "=" '/PROXY_SERVER/ {print $2}' .env)"
+    local PROXY_PORT="$(awk -F "=" '/PROXY_PORT/ {print $2}' .env)"
+    local PROXY_USER="$(awk -F "=" '/PROXY_USER/ {print $2}' .env)"
+    local PROXY_PASSWD="$(awk -F "=" '/PROXY_PASSWD/ {print $2}' .env)"
 
     # bild nodejs image from Dockerfile.node
-    # docker build --force-rm \
-    #--build-arg proxy_address=$(PROXY_ADDRESS) \
-    #--build-arg proxy_port=3128 \
-    #--build-arg proxy_user=andre.haag \
-    #--build-arg proxy_passwd=dfvbzaq369 \
-    #-t nodejs - < Dockerfile.node
-    docker build --force-rm -t nodejs - < Dockerfile.node
+    docker build --force-rm \
+        --build-arg use_proxy=${USE_PROXY} \
+        --build-arg proxy_server=${PROXY_SERVER} \
+        --build-arg proxy_port=${PROXY_PORT} \
+        --build-arg proxy_user=${PROXY_USER} \
+        --build-arg proxy_passwd=${PROXY_PASSWD} \
+        -t nodejs - < Dockerfile.node
 
     # remove previous images from services
     docker-compose rm -f
