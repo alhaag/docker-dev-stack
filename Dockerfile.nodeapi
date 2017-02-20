@@ -1,0 +1,7 @@
+FROM dev-node
+
+MAINTAINER "Andre Luiz Haag" <andreluizhaag@gmail.com>
+
+WORKDIR /var/www/html
+
+ENTRYPOINT ["pm2", "logs"]

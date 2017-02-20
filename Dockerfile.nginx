@@ -1,0 +1,10 @@
+FROM nginx
+
+MAINTAINER "Andre Luiz Haag" <andreluizhaag@gmail.com>
+
+RUN DEBIAN_FRONTEND=noninteractive apt-get update -q \
+    && DEBIAN_FRONTEND=noninteractive apt-get dist-upgrade -y \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y \
+        curl
+
+CMD ["nginx", "-g", "daemon off;"]

@@ -1,9 +1,15 @@
 # Docker developer environment
 
-Ambiente completo para desenvolvimento em máquina virtual por meio do containers Docker e Docker Compose.
+Ambiente completo para desenvolvimento em containers Docker e Docker Compose para abstração da inicialização dos serviços.
+
+Possui também a funcionalidade de incluir atalhos no **bash**(terminal interpretador de comandos) para facilitar a
+execução de comandos presentes nos containers, diretamente no terminal do host hospedeiro. Isso permite executar alguns
+comandos como **npm, mysql, etc** de forma transparente e fora do container.
 
 ## Funcionalidades
-Prove ambiente de desenvolvimento em CentOS 7 com as seguintes aplicações:
+
+Serviços e ferramentas disponibilizadas:
+
  * PHP-FPM
  * Nginx
  * MySQL
@@ -13,6 +19,7 @@ Prove ambiente de desenvolvimento em CentOS 7 com as seguintes aplicações:
    * bower
 
 ## Requisitos
+
  * Docker >= 1.12
  * Docker Compose >= 1.9
 
@@ -26,6 +33,7 @@ $ sudo chmod +x /usr/local/bin/docker-compose
 ```
 
 ## Utilização
+
 Copiar o arquivo **.env.example** para **.env** e alterar as variáveis de ambiente conforme necessidade.
 
 | Variável             | Descrição                |
@@ -58,14 +66,17 @@ $ make <opcao>
 ```
 
 ### Lista de opções do Make:
+
 | Opção     | Descrição                |
 |:--------- |:------------------------ |
 | bashrc    | Instala opções adicionas no BASH do usuário corrente para utilização de serviços por meio de containers de forma transparente. Ex: composer, npm, gulp, mongo, mysql, etc. |
 | build     | Remove imagens buildadas anteriormente e recompila todos os containers. |
 | up        | Inicia todos os serviços. Alguns containers são utilizados sob demanda e não são iniciados com esta opção. |
 | stop      | Para os serviços em execução |
+| clear     | Para os serviços em execução e remove todos os containers e imagens compiladas (não remove imagens base) |
 
 ### Opções útes do Docker:
+
 ```
 $ docker ps                              # listar container em execução
 $ docker stats                           # apresenta o consumo de recursos dos cantainers em tempo real
@@ -109,7 +120,7 @@ $ gulp watch
 
 Permite utilizar o CLI do container mysql para importação de arquivos SQL. Ex:
 ```
-$ mysql -uroot -p123456  < "db.sql"
+$ mysql -uroot -p123456  < db.sql
 ```
 
 **mongo**:

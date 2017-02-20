@@ -4,7 +4,7 @@ services:
 
   mongo:
     image: mongo:latest
-    container_name: mongo
+    container_name: dev-mongo
     hostname: mongo
     ports:
       - "27017:27017"
@@ -12,8 +12,8 @@ services:
       - "${MONGO_DATA}:/data/db"
 
   mysql:
-    image: mysql:${MYSQL_VERSION}
-    container_name: mysql
+    image: dev-mysql:${MYSQL_VERSION}
+    container_name: dev-mysql
     hostname: mysql
     stdin_open: true
     tty: true
@@ -29,10 +29,12 @@ services:
       - "${MYSQL_DATA}:/var/lib/mysql"
 
   php-fpm:
+    image: dev-php-fpm:${PHP_VERSION}
     build:
       context: .
-      dockerfile: Dockerfile.php${PHP_VERSION}-fpm.debian
-    container_name: php-fpm
+      dockerfile: Dockerfile.php${PHP_VERSION}-fpm
+    container_name: dev-php-fpm
+    hostname: php-fpm
     ports:
       - "9000:9000"
     volumes:
@@ -42,9 +44,29 @@ services:
     depends_on:
       - mysql
 
+  node:
+    image: node-api
+    build:
+      context: .
+      dockerfile: Dockerfile.nodeapi
+    container_name: dev-node-api
+    hostname: node-api
+    ports:
+      - "8000-8999:8000-8999"
+    volumes:
+      - "${WWW_DATA}:/var/www/html"
+    links:
+      - mongo
+      - mysql
+    depends_on:
+      - mongo
+
   web:
-    image: nginx:alpine
-    container_name: nginx
+    image: nginx
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx
+    container_name: dev-nginx
     ports:
       - "80:80"
     volumes:
@@ -54,5 +76,7 @@ services:
     links:
       - php-fpm
       - mysql
+      - node
     depends_on:
       - php-fpm
+      - node

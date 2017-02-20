@@ -1,4 +1,4 @@
-FROM node:alpine
+FROM node
 
 MAINTAINER "Andre Luiz Haag" <andreluizhaag@gmail.com>
 
@@ -14,7 +14,17 @@ RUN if $use_proxy == "true"; then \
         echo -e "NPM Utilizando Proxy: ${proxy_server}:${proxy_port}"; \
     fi
 
-# Install Gulp & Bower
-RUN npm install -g gulp bower
+RUN DEBIAN_FRONTEND=noninteractive apt-get update -q \
+    && DEBIAN_FRONTEND=noninteractive apt-get dist-upgrade -y \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y \
+        git
 
-CMD ["node", "-v"]
+RUN npm install -g \
+    gulp \
+    bower \
+    polymer-cli \
+    pm2
+
+#CMD ["cd", "/var/www/html/dsc-api-auth"]
+#CMD ["npm", "start"]
+#CMD ["pm2", "logs"]
