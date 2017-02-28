@@ -4,4 +4,6 @@ MAINTAINER "Andre Luiz Haag" <andreluizhaag@gmail.com>
 
 WORKDIR /var/www/html
 
-ENTRYPOINT ["pm2", "logs"]
+RUN touch /entrypoint.sh
+
+ENTRYPOINT ["/entrypoint.sh"]

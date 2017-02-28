@@ -38,7 +38,7 @@ version=0
 
 start()
 {
-    docker-compose up -d
+    docker-compose up --force-recreate
 }
 
 stop()

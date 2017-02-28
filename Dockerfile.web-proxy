@@ -1,0 +1,8 @@
+FROM openresty/openresty:xenial
+
+ARG timezone
+
+RUN ln -snf /usr/share/zoneinfo/$timezone /etc/localtime && echo $timezone > /etc/timezone
+RUN /usr/local/openresty/luajit/bin/luarocks install lua-resty-jwt
+
+ENTRYPOINT ["/usr/local/openresty/bin/openresty", "-g", "daemon off;", "-c", "/nginx.conf"]
