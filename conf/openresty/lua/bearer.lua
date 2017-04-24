@@ -53,9 +53,14 @@ end
 
 -- finally, if still no JWT token, kick out an error and exit
 if token == nil then
+    local body = '{"error":"Proxy: missing JWT token or Authorization header"}'
     ngx.status = ngx.HTTP_UNAUTHORIZED
-    ngx.header.content_type = "application/json; charset=utf-8"
-    ngx.say('{"error": "Proxy: missing JWT token or Authorization header"}')
+    ngx.header.Content_Type = "application/json; charset=utf-8"
+    ngx.header.Access_Control_Allow_Headers = "content-type, authorization, cache-control"
+    ngx.header.Access_Control_Allow_Methods = "PUT, GET, POST, DELETE, OPTIONS"
+    ngx.header.Access_Control_Allow_Origin = "*"
+    ngx.header.Content_Length = string.len(body)
+    ngx.say(body)
     ngx.exit(ngx.HTTP_UNAUTHORIZED)
 end
 
@@ -81,11 +86,16 @@ local claim_spec = {
 local jwt_secret = os.getenv("JWT_SECRET")
 local jwt_obj = jwt:verify(jwt_secret, token, claim_spec)
 if not jwt_obj["verified"] then
+    local body = '{"error": "Proxy: ' .. jwt_obj.reason .. '"}'
     ngx.status = ngx.HTTP_UNAUTHORIZED
     ngx.log(ngx.WARN, jwt_obj.reason)
     ngx.log(ngx.WARN, token)
-    ngx.header.content_type = "application/json; charset=utf-8"
-    ngx.say('{"error": "Proxy: ' .. jwt_obj.reason .. '"}')
+    ngx.header.Content_Type = "application/json; charset=utf-8"
+    ngx.header.Access_Control_Allow_Headers = "content-type, authorization, cache-control"
+    ngx.header.Access_Control_Allow_Methods = "PUT, GET, POST, DELETE, OPTIONS"
+    ngx.header.Access_Control_Allow_Origin = "*"
+    ngx.header.Content_Length = string.len(body)
+    ngx.say(body)
     -- {"error": "Proxy: "'iat' claim not valid until Thu, 14 Aug 49119 09:15:10 GMT"}
     -- ngx.say("{\"error\": \"Proxy: " .. jwt_obj.reason .. "\", \"secret\": \"" .. jwt_secret .. "\", \"token\": \"" .. token .. "\" }")
     ngx.exit(ngx.HTTP_UNAUTHORIZED)
