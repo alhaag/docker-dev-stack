@@ -22,8 +22,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update -q \
 RUN npm install -g \
     gulp \
     bower \
-    polymer-cli \
-    pm2
+    polymer-cli
 
 #CMD ["cd", "/var/www/html/dsc-api-auth"]
 #CMD ["npm", "start"]

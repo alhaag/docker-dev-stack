@@ -1,9 +1,0 @@
-FROM dev-node
-
-MAINTAINER "Andre Luiz Haag" <andreluizhaag@gmail.com>
-
-WORKDIR /var/www/html
-
-RUN touch /entrypoint.sh
-
-ENTRYPOINT ["/entrypoint.sh"]

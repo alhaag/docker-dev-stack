@@ -6,6 +6,7 @@ services:
     image: mongo:latest
     container_name: dev-mongo
     hostname: mongo
+    restart: always
     ports:
       - "27017:27017"
     environment:
@@ -19,6 +20,7 @@ services:
     hostname: mysql
     stdin_open: true
     #tty: true
+    restart: always
     ports:
       - "3306:3306"
     environment:
@@ -38,6 +40,7 @@ services:
       dockerfile: Dockerfile.php${PHP_VERSION}-fpm
     container_name: dev-php-fpm
     hostname: php-fpm
+    restart: always
     ports:
       - "9000:9000"
     environment:
@@ -49,26 +52,93 @@ services:
     depends_on:
       - mysql
 
-  node:
-    image: dev-node-services
+  api-auth:
+    image: dev-node
     build:
       context: .
-      dockerfile: Dockerfile.node-services
-    container_name: dev-node-services
-    hostname: node
+      dockerfile: Dockerfile.node
+    container_name: api-auth
+    hostname: api-auth
+    restart: always
     environment:
       TZ: "${TZ}"
-      JWT_SECRET: "${JWT_SECRET}"
-    ports:
-      - "8000-8010:8000-8010"
-      - "8100-8110:8100-8110"
+    expose:
+      - "3000"
     volumes:
       - "${WWW_DATA}:/var/www/html"
-      - "${NODE_SERVICES_ENTRYPOINT}:/entrypoint.sh"
     command: >
        sh -c "ln -snf /usr/share/zoneinfo/$TZ /etc/localtime &&
        echo $TZ > /etc/timezone &&
-       chmod 777 /entrypoint.sh"
+       cd /var/www/html/dsc-api-auth && npm start"
+    links:
+      - mongo
+    depends_on:
+      - mongo
+
+  api-mail:
+    image: dev-node
+    build:
+      context: .
+      dockerfile: Dockerfile.node
+    container_name: api-mail
+    hostname: api-mail
+    restart: always
+    environment:
+      TZ: "${TZ}"
+    expose:
+      - "3000"
+    volumes:
+      - "${WWW_DATA}:/var/www/html"
+    command: >
+       sh -c "ln -snf /usr/share/zoneinfo/$TZ /etc/localtime &&
+       echo $TZ > /etc/timezone &&
+       cd /var/www/html/dsc-api-mail && npm start"
+    links:
+      - mongo
+    depends_on:
+      - mongo
+
+  api-address:
+    image: dev-node
+    build:
+      context: .
+      dockerfile: Dockerfile.node
+    container_name: api-address
+    hostname: api-address
+    restart: always
+    environment:
+      TZ: "${TZ}"
+    expose:
+      - "3000"
+    volumes:
+      - "${WWW_DATA}:/var/www/html"
+    command: >
+       sh -c "ln -snf /usr/share/zoneinfo/$TZ /etc/localtime &&
+       echo $TZ > /etc/timezone &&
+       cd /var/www/html/dsc-api-address && npm start"
+    links:
+      - mongo
+    depends_on:
+      - mongo
+
+  api-suelentavares:
+    image: dev-node
+    build:
+      context: .
+      dockerfile: Dockerfile.node
+    container_name: api-suelentavares
+    hostname: api-suelentavares
+    restart: always
+    environment:
+      TZ: "${TZ}"
+    expose:
+      - "3000"
+    volumes:
+      - "${WWW_DATA}:/var/www/html"
+    command: >
+       sh -c "ln -snf /usr/share/zoneinfo/$TZ /etc/localtime &&
+       echo $TZ > /etc/timezone &&
+       cd /var/www/html/dsc-api-suelentavares && npm start"
     links:
       - mongo
     depends_on:
@@ -83,6 +153,7 @@ services:
         timezone: "${TZ}"
     container_name: dev-web-proxy
     hostname: web-proxy
+    restart: always
     environment:
       JWT_SECRET: "${JWT_SECRET}"
     ports:
@@ -91,9 +162,15 @@ services:
       - "${OPENRESTY_NGINX_CONF}:/nginx.conf"
       - ./conf/openresty/lua/bearer.lua:/bearer.lua
     links:
-      - node
+      - api-auth
+      - api-mail
+      - api-address
+      - api-suelentavares
     depends_on:
-      - node
+      - api-auth
+      - api-mail
+      - api-address
+      - api-suelentavares
 
   web:
     image: nginx
@@ -101,6 +178,7 @@ services:
       context: .
       dockerfile: Dockerfile.nginx
     container_name: dev-nginx
+    restart: always
     ports:
       - "80:80"
     environment:
@@ -113,9 +191,15 @@ services:
     links:
       - php-fpm
       - mysql
-      - node
+      - api-auth
+      - api-mail
+      - api-address
+      - api-suelentavares
       - web-proxy
     depends_on:
       - php-fpm
-      - node
+      - api-auth
+      - api-mail
+      - api-address
+      - api-suelentavares
       - web-proxy
