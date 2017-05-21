@@ -18,7 +18,7 @@
 #######################################
 clear()
 {
-    local img_node=$(docker images -q dev-node 2> /dev/null)
+    local img_node=$(docker images -q dsc-node 2> /dev/null)
     if [[ "${img_node}" != "" ]]; then
         docker rmi -f ${img_node}
     fi
