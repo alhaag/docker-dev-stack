@@ -17,5 +17,5 @@ echo "Running inside 'dsc-node' container:"
 
 docker run -it -u `id -u $USER` --rm \
 -v $(pwd):/app \
-dev-node sh \
+dsc-node sh \
 -ci "cd /app && gulp $@"
