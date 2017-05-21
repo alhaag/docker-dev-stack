@@ -22,4 +22,5 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update -q \
 RUN npm install -g \
     gulp \
     bower \
+    nodemon \
     polymer-cli
