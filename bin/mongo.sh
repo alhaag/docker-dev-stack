@@ -6,4 +6,4 @@
 # See: https://google.github.io/styleguide/shell.xml
 
 echo "Running inside 'mongo' container:"
-docker exec -it dev-mongo mongo
+docker exec -it mongo mongo

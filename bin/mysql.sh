@@ -9,4 +9,4 @@
 echo "Running inside 'dev-mysql' container:"
 # docker exec -it mysql bash -c 'mysql -uroot -p -e "show databases;"'
 # docker exec -i mysql mysql -uroot -pPASSWD  < "db.sql"
-docker exec -i dev-mysql mysql $@
+docker exec -i mysql:5.6.35 mysql $@

@@ -1,5 +1,0 @@
-FROM composer/composer:alpine
-
-MAINTAINER "Andre Luiz Haag" <andreluizhaag@gmail.com>
-
-CMD ["composer", "--version"]

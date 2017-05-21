@@ -7,5 +7,5 @@
 # Autor: Andre Luiz Haag
 # See: https://google.github.io/styleguide/shell.xml
 
-echo "Running inside 'dev-composer' container:"
-docker run --rm -u $UID -v `pwd`:/app dev-composer "$@"
+echo "Running inside 'composer' container:"
+docker run --rm -u $UID -v `pwd`:/app composer "$@"

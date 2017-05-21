@@ -33,6 +33,6 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update -q \
 # pdo_pgsql pdo_sqlite pgsql phar posix pspell readline recode reflection session shmop simplexml snmp soap sockets
 # spl standard sysvmsg sysvsem sysvshm tidy tokenizer wddx xml xmlreader xmlrpc xmlwriter xsl zip
 
-COPY conf/php/php.ini /usr/local/etc/php/
+# COPY conf/php/php.ini /usr/local/etc/php/
 
 CMD ["/usr/local/sbin/php-fpm"]

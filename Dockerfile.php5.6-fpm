@@ -29,6 +29,6 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update -q \
     && docker-php-ext-install json
 
 # php.ini
-COPY conf/php/php.ini /usr/local/etc/php/
+# COPY conf/php/php.ini /usr/local/etc/php/
 
 CMD ["/usr/local/sbin/php-fpm"]

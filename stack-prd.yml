@@ -1,0 +1,175 @@
+version: '3'
+
+#networks:
+#  services-net:
+#    driver: global
+
+services:
+
+  #
+  # MONGO DB
+  # #############################################
+  mongo:
+    image: mongo:latest
+    container_name: mongo
+    #networks:
+    #  - services-net
+    hostname: mongo
+    ports:
+      - "27017:27017"
+    environment:
+      TZ: "${TZ}"
+    volumes:
+      - "${MONGO_DATA}:/data/db"
+    restart: always
+
+  #
+  # API AUTH
+  # #############################################
+  api-auth:
+    image: dsc-node
+    container_name: api-auth
+    #networks:
+    #  - services-net
+    links:
+      - mongo
+    hostname: api-auth
+    environment:
+      TZ: "${TZ}"
+    volumes:
+      - "${WWW_DATA}:/var/www/html"
+    command: >
+       sh -c "ln -snf /usr/share/zoneinfo/$TZ /etc/localtime &&
+       echo $TZ > /etc/timezone &&
+       cd /var/www/html/dsc-api-auth && npm start"
+    depends_on:
+      - mongo
+    restart: always
+
+  #
+  # API MAIL
+  # #############################################
+  api-mail:
+    image: dsc-node
+    container_name: api-mail
+    #networks:
+    #  - services-net
+    links:
+      - mongo
+    hostname: api-mail
+    environment:
+      TZ: "${TZ}"
+    volumes:
+      - "${WWW_DATA}:/var/www/html"
+    command: >
+       sh -c "ln -snf /usr/share/zoneinfo/$TZ /etc/localtime &&
+       echo $TZ > /etc/timezone &&
+       cd /var/www/html/dsc-api-mail && npm start"
+    depends_on:
+      - mongo
+    restart: always
+
+  #
+  # API ADDRESS
+  # #############################################
+  api-address:
+    image: dsc-node
+    container_name: api-address
+    #networks:
+    #  - services-net
+    links:
+      - mongo
+    hostname: api-address
+    environment:
+      TZ: "${TZ}"
+    volumes:
+      - "${WWW_DATA}:/var/www/html"
+    command: >
+       sh -c "ln -snf /usr/share/zoneinfo/$TZ /etc/localtime &&
+       echo $TZ > /etc/timezone &&
+       cd /var/www/html/dsc-api-address && npm start"
+    depends_on:
+      - mongo
+    restart: always
+
+  #
+  # API SUELENTAVARES
+  # #############################################
+  api-suelentavares:
+    image: dsc-node
+    container_name: api-suelentavares
+    #networks:
+    #  - services-net
+    links:
+      - mongo
+    hostname: api-suelentavares
+    environment:
+      TZ: "${TZ}"
+    volumes:
+      - "${WWW_DATA}:/var/www/html"
+    command: >
+       sh -c "ln -snf /usr/share/zoneinfo/$TZ /etc/localtime &&
+       echo $TZ > /etc/timezone &&
+       cd /var/www/html/dsc-api-suelentavares && npm start"
+    depends_on:
+      - mongo
+    restart: always
+
+  #
+  # OPENRESTY (Web proxy api autorization)
+  # #############################################
+  openresty:
+    image: dsc-openresty:latest
+    container_name: openresty
+    #networks:
+    #  - services-net
+    links:
+      - api-auth
+      - api-mail
+      - api-address
+      - api-suelentavares
+    hostname: openresty
+    environment:
+      JWT_SECRET: "${JWT_SECRET}"
+    #ports:
+    #  - "8080:8080"
+    volumes:
+      - "${OPENRESTY_HOSTS_CONF}:/etc/nginx/conf.d"
+      - "${OPENRESTY_NGINX_CONF}:/nginx.conf"
+      - ./conf/openresty/lua/bearer.lua:/bearer.lua
+    depends_on:
+      - api-auth
+      - api-mail
+      - api-address
+      - api-suelentavares
+    restart: always
+
+  #
+  # NGINX (External web border 80 and 443 ports)
+  # #############################################
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    #networks:
+    #  - services-net
+    links:
+      - api-auth
+      - api-mail
+      - api-address
+      - api-suelentavares
+      - openresty
+    ports:
+      - "80:80"
+    environment:
+      TZ: "${TZ}"
+    volumes:
+      - "${WWW_DATA}:/var/www/html"
+      - "${NGINX_HOSTS_CONF}:/etc/nginx/conf.d"
+      - ./conf/nginx/nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - api-auth
+      - api-mail
+      - api-address
+      - api-suelentavares
+      - openresty
+    restart: always

@@ -8,4 +8,4 @@
 # See: https://google.github.io/styleguide/shell.xml
 
 echo "Running inside 'mongo' container:"
-docker exec -i dev-mongo mongoimport $@
+docker exec -i dsc-mongo mongoimport $@

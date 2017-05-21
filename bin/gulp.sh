@@ -7,7 +7,7 @@
 # Autor: Andre Luiz Haag
 # See: https://google.github.io/styleguide/shell.xml
 
-echo "Running inside 'dev-node' container:"
+echo "Running inside 'dsc-node' container:"
 #docker run -it -u `id -u $USER` --rm \
 #-v /etc/passwd:/etc/passwd \
 #-v "/home/$USER:/home/$USER" \
