@@ -109,6 +109,18 @@ $ docker-compose -f stack-${env}.yml stop $service_name
 $ docker-compose -f stack-${env}.yml logs -f
 ```
 
+### outros
+env $(cat .env | grep ^[A-Z] | xargs) docker stack deploy --compose-file stack-dev.yml dev
+
+docker service ls
+docker service logs -f $service_id
+
+docker stack rm $stack_name
+
+sudo journalctl -fu docker.service
+
+docker stats $(docker ps --format={{.Names}})
+
 ## TODO
 
  * Criar container Redis.

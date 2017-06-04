@@ -7,5 +7,6 @@
 # Autor: Andre Luiz Haag
 # See: https://google.github.io/styleguide/shell.xml
 
-echo "Running inside 'mongo' container:"
-docker exec -i dsc-mongo mongoimport $@
+echo "Running inside 'dev_mongo.1.(dinamicaly_id)' container:"
+# docker run -i mongo:latest mongoimport $@
+docker exec -i $(docker ps -f 'name=dev_mongo.1' -q) mongoimport $@

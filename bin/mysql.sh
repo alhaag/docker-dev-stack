@@ -6,7 +6,5 @@
 # Autor: Andre Luiz Haag
 # See: https://google.github.io/styleguide/shell.xml
 
-echo "Running inside 'mysql:5.6.35' container:"
-# docker exec -it mysql bash -c 'mysql -uroot -p -e "show databases;"'
-# docker exec -i mysql mysql -uroot -pPASSWD  < "db.sql"
-docker exec -i mysql:5.6.35 mysql $@
+echo "Running inside 'dev_mysql.1.(dinamicaly_id)' container:"
+docker exec -i $(docker ps -f 'name=dev_mysql.1' -q) mysql $@
